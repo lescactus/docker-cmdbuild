@@ -1,0 +1,37 @@
+version : '2' 
+
+services:
+ tomcat:
+  build:
+    context: cmdbuild
+    dockerfile: Dockerfile
+  container_name: cmdbuild
+  depends_on: 
+   - pgsql
+  ports:
+   - "80:8080"
+   - "2222:22"
+  volumes:
+   - "./tomcat/:/usr/local/tomcat/"
+  restart: always
+  networks:
+   - cmdbuild-network
+
+ pgsql:
+  image: postgres:9.3
+  container_name: postgresql
+  restart: always
+  environment:
+   - POSTGRES_PASSWORD=#toto33
+   - POSTGRES_DB=cmdbuild
+   - POSTGRES_USER=cmdbuild
+  networks:
+   - cmdbuild-network
+  volumes: 
+   - "./postgresql/:/var/lib/postgresql/data/"
+
+
+
+networks:
+  cmdbuild-network:
+     driver: bridge
